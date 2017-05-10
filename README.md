@@ -2,15 +2,15 @@
 
 A naive example to make a API REST with Flask
 
-# Requirements
+# Beginning
 
-First step will be to make a virtual enviroment with python 3.
+First step, we will be make a virtual environment with python 3.
 
 ```Shell
 $ pip install virtualenv
 ```
 
-Go to a folder where you hold your virtual enviroments
+Go to a folder where you hold your virtual environments
 
 ```Shell
 $ virtualenv virtualenvFlask -p /usr/bin/python3
