@@ -15,3 +15,15 @@ Go to a folder where you hold your virtual environments
 ```Shell
 $ virtualenv virtualenvFlask -p /usr/bin/python3
 ```
+
+Activate virtual environment
+
+```Shell
+$ source virtualenvFlask/bin/activate
+```
+
+Go to project folder and install the requirements
+
+```Shell
+$ pip install -r requirements.txt
+```
