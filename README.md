@@ -1,8 +1,8 @@
 # Flask_api
 
-A naive example to make a API REST with Flask
+Just another example to make a API REST with Flask
 
-# Beginning
+## Beginning
 
 First step, we will be make a virtual environment with python 3.
 
