@@ -5,11 +5,7 @@ apt-get update $APT_OPTS
 # install vim
 apt-get install vim $APT_OPTS
 
-echo mysql-server mysql-server/root_password password root | sudo debconf-set-selections
-
-echo mysql-server mysql-server/root_password_again password root | sudo debconf-set-selections
-
-apt-get install mysql-server $APT_OPTS
+apt-get install sqlite3 libsqlite3-dev
 
 apt-get install build-essential python3-dev python3-setuptools $APT_OPTS
 

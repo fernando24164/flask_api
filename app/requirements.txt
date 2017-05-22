@@ -1,2 +1,7 @@
 flask==0.12.1
+flask-migrate
 Flask-Script==2.0.5
+Flask-HTTPAuth==2.7.0
+Flask-SQLAlchemy==2.1
+SQLAlchemy==1.1.5
+alembic==0.8.10
