@@ -35,7 +35,7 @@ $ pip install -r requirements.txt
 ```
 
 You also need to create the database, if you want to change the name of the database
-you need to change **config.py** the SQLALCHEMY_DATABASE_URI
+you need to change **config.py** the SQLALCHEMY_DATABASE_URI var
 
 ```Python
 SQLALCHEMY_DATABASE_URI = 'sqlite:///' + os.path.join(basedir,
