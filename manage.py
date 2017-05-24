@@ -18,9 +18,9 @@ def make_shell_context():
 
 manager.add_command("shell", Shell(make_context=make_shell_context))
 manager.add_command("db", MigrateCommand)
-manager.add_command("runserver", Server(host='0.0.0.0',
-                                        port=5000,
-                                        use_debugger=False))
+manager.add_command("run", Server(host='0.0.0.0',
+                                  port=5000,
+                                  use_debugger=False))
 
 
 @manager.command
@@ -35,7 +35,7 @@ def test():
 def migrate():
     """Make migrations"""
     from flask_migrate import upgrade
-    from app.models import User, Weather_Station
+    from app.api.models import User, Weather_Station
 
     upgrade()
 
