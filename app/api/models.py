@@ -1,12 +1,20 @@
 from .. import db
 from werkzeug.security import generate_password_hash, check_password_hash
+from datetime import datetime
 
-association_table = db.Table('association', db.Model.metadata,
-                             db.Column('user_id', db.Integer,
-                                       db.ForeignKey('users.id')),
-                             db.Column('station_id', db.Integer,
-                                       db.ForeignKey('stations.id'))
-                             )
+association = db.Table('association', db.Model.metadata,
+                       db.Column('user_id', db.Integer,
+                                 db.ForeignKey('users.id')),
+                       db.Column('station_id', db.Integer,
+                                 db.ForeignKey('stations.id'))
+                       )
+
+forecast = db.Table('weather_forecast',
+                    db.Column('station_id', db.Integer,
+                              db.ForeignKey('stations.id')),
+                    db.Column('forecast_id', db.Integer,
+                              db.ForeignKey('forecasts.id'))
+                    )
 
 
 class User(db.Model):
@@ -40,6 +48,43 @@ class User(db.Model):
                 db.session.rollback()
 
 
+class Forecast(db.Model):
+    __tablename__ = 'forecasts'
+    id = db.Column(db.Integer, primary_key=True)
+    date = db.Column(db.DateTime, default=datetime.now(), index=True)
+    temperature = db.Column(db.String)
+    wind_speed = db.Column(db.String)
+    humidity = db.Column(db.String)
+    comments = db.Column(db.Text)
+
+    def __repr__(self):
+        return '<Forecast date: %s>' % self.date
+
+    @staticmethod
+    def insert_forecasts(forecasts=25):
+        from sqlalchemy.exc import InternalError
+        import forgery_py
+
+        for forecast in range(5):
+            data = Forecast(date=forgery_py.date.datetime(past=True,
+                                                          min_delta=0,
+                                                          max_delta=5),
+                            temperature=str(forgery_py.basic.number(
+                                at_least=15, at_most=31))+'ºC',
+                            wind_speed=str(forgery_py.basic.number(
+                                at_least=5, at_most=25))+'Km/h',
+                            humidity=str(forgery_py.basic.number(
+                                at_least=35, at_most=70))+'%',
+                            comments=forgery_py.lorem_ipsum.paragraph(
+                                sentences_quantity=2))
+
+            db.session.add(data)
+            try:
+                db.session.commit()
+            except InternalError:
+                db.session.rollback()
+
+
 class Weather_Station(db.Model):
     __tablename__ = 'stations'
     id = db.Column(db.Integer, primary_key=True)
@@ -47,7 +92,9 @@ class Weather_Station(db.Model):
     latitude = db.Column(db.String(255))
     longitude = db.Column(db.String(255))
     users = db.relationship("User",
-                            secondary=association_table)
+                            secondary=association)
+    forecasts = db.relationship("Forecast",
+                                secondary=forecast)
 
     def __repr__(self):
         return '<Weather_Station %s>' % self.description
@@ -64,6 +111,10 @@ class Weather_Station(db.Model):
                                    longitude=str(forgery_py.geo.longitude_degrees()) +
                                    str(forgery_py.geo.longitude_direction()))
             users = User.query.all()
+            forecasts = Forecast.query.all()
+            for forecast in forecasts:
+                if forecast.id % (station+1) == 0:
+                    data.forecasts.append(forecast)
             for user in users:
                 data.users.append(user)
 

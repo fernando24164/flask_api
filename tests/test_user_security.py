@@ -1,6 +1,7 @@
 from unittest import TestCase
 from app import create_app, db
-from app.api.models import User
+from app.api.models import User, Weather_Station, Forecast
+
 
 
 class UserModelTestCase(TestCase):
@@ -20,3 +21,7 @@ class UserModelTestCase(TestCase):
     def test_password(self):
         user = User(name='admin', pwd='admin')
         self.assertTrue(user.verify_password('admin'))
+
+    def test_url(self):
+        response = self.client.get('/api/test/')
+        self.assertTrue(response.status_code == 200)

@@ -1,8 +1,8 @@
 #!/usr/bin/env python
 from app import create_app, db
-from flask_script import Manager, Shell, Server
+from flask_script import Manager, Shell
 from flask_migrate import Migrate, MigrateCommand
-from app.api.models import User, Weather_Station
+from app.api.models import User, Weather_Station, Forecast
 
 app = create_app('default')
 manager = Manager(app)
@@ -13,14 +13,12 @@ def make_shell_context():
     return dict(app=app,
                 db=db,
                 User=User,
-                Weather_Station=Weather_Station)
+                Weather_Station=Weather_Station,
+                Forecast=Forecast)
 
 
 manager.add_command("shell", Shell(make_context=make_shell_context))
 manager.add_command("db", MigrateCommand)
-manager.add_command("run", Server(host='0.0.0.0',
-                                  port=5000,
-                                  use_debugger=False))
 
 
 @manager.command
@@ -35,11 +33,12 @@ def test():
 def migrate():
     """Make migrations"""
     from flask_migrate import upgrade
-    from app.api.models import User, Weather_Station
+    from app.api.models import User, Weather_Station, Forecast
 
     upgrade()
 
     User.insert_users()
+    Forecast.insert_forecasts()
     Weather_Station.insert_stations()
 
 
