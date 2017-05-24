@@ -1,8 +1,8 @@
 #!/usr/bin/env python
 from app import create_app, db
-from flask_script import Manager, Shell
+from flask_script import Manager, Shell, Server
 from flask_migrate import Migrate, MigrateCommand
-from app.models import User, Weather_Station
+from app.api.models import User, Weather_Station
 
 app = create_app('default')
 manager = Manager(app)
@@ -18,6 +18,9 @@ def make_shell_context():
 
 manager.add_command("shell", Shell(make_context=make_shell_context))
 manager.add_command("db", MigrateCommand)
+manager.add_command("runserver", Server(host='0.0.0.0',
+                                        port=5000,
+                                        use_debugger=False))
 
 
 @manager.command
@@ -38,6 +41,14 @@ def migrate():
 
     User.insert_users()
     Weather_Station.insert_stations()
+
+
+@manager.command
+def reset():
+    """Reset the database"""
+    from flask_migrate import downgrade
+
+    downgrade()
 
 
 if __name__ == '__main__':
