@@ -14,6 +14,9 @@ Vagrant.configure(2) do |config|
     s.args = [server_ip, cpus]
   end
 
+  config.vm.network :private_network, ip: server_ip
+  config.vm.network "forwarded_port", guest: 80, host: 5000
+
   config.vm.provider "virtualbox" do |v|
     v.name = "api"
     v.memory = 256
