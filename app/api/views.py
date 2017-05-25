@@ -4,7 +4,6 @@ from flask.json import jsonify
 from .models import User
 from .errors import ErrorResponse
 from flask.ext.httpauth import HTTPBasicAuth
-import json
 
 
 authorization_check = HTTPBasicAuth()
