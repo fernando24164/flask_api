@@ -1,8 +1,8 @@
 """initial
 
-Revision ID: d3fb52be49ab
+Revision ID: c910427465f4
 Revises: 
-Create Date: 2017-05-24 17:32:29.693327
+Create Date: 2017-05-25 09:34:56.179503
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = 'd3fb52be49ab'
+revision = 'c910427465f4'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -42,7 +42,7 @@ def upgrade():
     sa.Column('pwdhash', sa.String(), nullable=True),
     sa.PrimaryKeyConstraint('id')
     )
-    op.create_index(op.f('ix_users_name'), 'users', ['name'], unique=False)
+    op.create_index(op.f('ix_users_name'), 'users', ['name'], unique=True)
     op.create_table('association',
     sa.Column('user_id', sa.Integer(), nullable=True),
     sa.Column('station_id', sa.Integer(), nullable=True),
