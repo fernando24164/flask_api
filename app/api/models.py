@@ -1,5 +1,7 @@
 from .. import db
 from werkzeug.security import generate_password_hash, check_password_hash
+from itsdangerous import TimedJSONWebSignatureSerializer as Signer
+from flask import current_app
 from datetime import datetime
 
 association = db.Table('association', db.Model.metadata,
@@ -20,7 +22,7 @@ forecast = db.Table('weather_forecast',
 class User(db.Model):
     __tablename__ = 'users'
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(55), index=True)
+    name = db.Column(db.String(55), unique=True, index=True)
     pwdhash = db.Column(db.String())
 
     def __init__(self, name, pwd):
@@ -29,6 +31,20 @@ class User(db.Model):
 
     def verify_password(self, password):
         return check_password_hash(self.pwdhash, password)
+
+    def generate_auth_token(self, expiration=600):
+        sign_hash = Signer(current_app.config['SECRET_KEY'],
+                           expires_in=expiration)
+        return sign_hash.dumps({'id': self.id})
+
+    @staticmethod
+    def verify_auth_token(token):
+        sign_hash = Signer(current_app.config['SECRET_KEY'])
+        try:
+            data = sign_hash.loads(token)
+        except:
+            return None
+        return User.query.get(data['id'])
 
     def __repr__(self):
         return '<User %s>' % self.name
@@ -39,7 +55,7 @@ class User(db.Model):
         import forgery_py
 
         for user in range(users):
-            data = User(name=forgery_py.name.first_name(), pwd='admin')
+            data = User(name=forgery_py.name.full_name(), pwd='admin')
 
             db.session.add(data)
             try:
