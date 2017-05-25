@@ -43,8 +43,7 @@ You also need to create the database, if you want to change the name of the data
 you need to change **config.py** the SQLALCHEMY_DATABASE_URI var
 
 ```Python
-SQLALCHEMY_DATABASE_URI = 'sqlite:///' + os.path.join(basedir,
-                                                        'weather.sqlite')
+SQLALCHEMY_DATABASE_URI = 'sqlite:///' + os.path.join(basedir, 'weather.sqlite')
 ```
 
 and create the database in our basedir
