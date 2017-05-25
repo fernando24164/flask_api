@@ -9,6 +9,9 @@ To up the virtual machine go to the project folder and type
 ```Shell
 $ vagrant up
 ```
+Watch out, the virtual machine get your port 5000.
+
+## Virtual environment
 
 If you don't have Vagrant you can make a virtual environment with python 3 and execute in local.
 
@@ -33,6 +36,8 @@ Go to project folder and install the requirements
 ```Shell
 $ pip install -r requirements.txt
 ```
+
+## Database
 
 You also need to create the database, if you want to change the name of the database
 you need to change **config.py** the SQLALCHEMY_DATABASE_URI var
