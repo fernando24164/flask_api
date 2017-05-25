@@ -1,9 +1,9 @@
 from . import api
 from flask import g
 from flask.json import jsonify
-from .models import User
+from .models import User, Weather_Station
 from .errors import ErrorResponse
-from flask.ext.httpauth import HTTPBasicAuth
+from flask_httpauth import HTTPBasicAuth
 
 
 authorization_check = HTTPBasicAuth()
@@ -48,10 +48,25 @@ def get_secret():
     return jsonify(message='Secret message!')
 
 
-@api.route('/users/<int:id>', methods=['GET'])
-def get_users(id):
-    user = User.query.filter_by(id=id).all()
-    return jsonify(message='In progress...')
+@api.route('/user/<int:id>', methods=['GET'])
+def get_user(id):
+    user = User.query.filter_by(id=id).first()
+    return jsonify(user.to_json())
+
+
+@api.route('/station/<int:id>', methods=['GET'])
+def get_station(id):
+    station = Weather_Station.query.filter_by(id=id).first()
+    return jsonify(station.to_json())
+
+
+@api.route('/stations', methods=['GET'])
+def get_stations():
+    arr_response = []
+    stations = Weather_Station.query.all()
+    for station in stations:
+        arr_response.append(station.to_json())
+    return jsonify(arr_response)
 
 
 @api.route('/test', methods=['GET'])

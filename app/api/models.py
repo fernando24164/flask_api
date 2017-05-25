@@ -49,6 +49,12 @@ class User(db.Model):
     def __repr__(self):
         return '<User %s>' % self.name
 
+    def to_json(self):
+        json_user = {
+            'name': self.name
+        }
+        return json_user
+
     @staticmethod
     def insert_users(users=5):
         from sqlalchemy.exc import InternalError
@@ -75,6 +81,16 @@ class Forecast(db.Model):
 
     def __repr__(self):
         return '<Forecast date: %s>' % self.date
+
+    def to_json(self):
+        json_forecast = {
+            'date': self.date,
+            'temperature': self.temperature,
+            'wind_speed': self.wind_speed,
+            'humidity': self.humidity,
+            'comments': self.comments
+        }
+        return json_forecast
 
     @staticmethod
     def insert_forecasts(forecasts=25):
@@ -104,7 +120,7 @@ class Forecast(db.Model):
 class Weather_Station(db.Model):
     __tablename__ = 'stations'
     id = db.Column(db.Integer, primary_key=True)
-    description = db.Column(db.String(255), unique=True)
+    description = db.Column(db.Text, unique=True)
     latitude = db.Column(db.String(255))
     longitude = db.Column(db.String(255))
     users = db.relationship("User",
@@ -115,13 +131,28 @@ class Weather_Station(db.Model):
     def __repr__(self):
         return '<Weather_Station %s>' % self.description
 
+    def get_forecast_array(self):
+        forecast_array = []
+        for forecast in self.forecasts:
+            forecast_array.append(forecast.to_json())
+        return forecast_array
+
+    def to_json(self):
+        json_station = {
+            'description': self.description,
+            'latitude': self.latitude,
+            'longitude': self.longitude,
+            'forecast': self.get_forecast_array()
+        }
+        return json_station
+
     @staticmethod
     def insert_stations(stations=5):
         from sqlalchemy.exc import InternalError
         import forgery_py
 
         for station in range(stations):
-            data = Weather_Station(description=forgery_py.address.street_name(),
+            data = Weather_Station(description=forgery_py.address.street_address(),
                                    latitude=str(forgery_py.geo.latitude_degrees()) +
                                    str(forgery_py.geo.latitude_direction()),
                                    longitude=str(forgery_py.geo.longitude_degrees()) +
