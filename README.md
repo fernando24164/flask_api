@@ -2,7 +2,7 @@
 
 Just another example to make a API REST with Flask
 
-## Beginning
+## Virtual machine
 
 To up the virtual machine go to the project folder and type
 
