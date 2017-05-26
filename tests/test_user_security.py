@@ -66,3 +66,7 @@ class UserModelTestCase(TestCase):
             '/api/secret',
             headers=self.get_api_headers(token, ''))
         self.assertTrue(response.status_code == 200)
+        json_response = json.loads(response.data.decode('utf-8'))
+        self.assertIsNotNone(json_response.get('message'))
+        message = json_response['message']
+        self.assertEqual(first=message, second='Secret message!')
