@@ -57,3 +57,12 @@ Make the migrations to create the models in the database
 ```Shell
 python3 manage.py migrate
 ```
+
+## Run
+
+If you run the project inside de virtual machine remember to add **-h 0.0.0.0** for you can access from outside.
+By default the port will be 5000, it can be changed adding **-p 8080**
+
+```Shell
+$ python3 manage.py runserver -h 0.0.0.0
+```
