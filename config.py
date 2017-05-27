@@ -18,6 +18,13 @@ class DevelopmentConfig(Config):
                                                           'weather.sqlite')
 
 
+class TestingConfig(Config):
+    DEBUG = True
+    SQLALCHEMY_DATABASE_URI = 'sqlite:///' + os.path.join(basedir,
+                                                          'test.sqlite')
+
+
 config = {
-    'default': DevelopmentConfig
+    'default': DevelopmentConfig,
+    'testing': TestingConfig
 }

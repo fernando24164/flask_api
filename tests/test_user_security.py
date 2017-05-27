@@ -3,12 +3,35 @@ from app import create_app, db
 from app.api.models import User
 from base64 import b64encode
 import json
+import os
+from config import basedir
+from flask_migrate import upgrade
 
 
 class UserModelTestCase(TestCase):
 
+    @staticmethod
+    def create_database(name):
+        complete_path = os.path.join(basedir, name)
+        with open(complete_path, 'a'):
+            os.utime(complete_path, None)
+
+    @staticmethod
+    def remove_database(name):
+        complete_path = os.path.join(basedir, name)
+        os.remove(complete_path)
+
+    @classmethod
+    def setUpClass(cls):
+        cls.create_database('test.sqlite')
+        upgrade()
+
+    @classmethod
+    def tearDownClass(cls):
+        cls.remove_database('test.sqlite')
+
     def setUp(self):
-        self.app = create_app('default')
+        self.app = create_app('testing')
         self.app_context = self.app.app_context()
         self.app_context.push()
         db.create_all()
